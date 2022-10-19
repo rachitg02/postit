@@ -3,6 +3,7 @@ import React from 'react';
 import { useRecoilValue } from 'recoil';
 import { authModalState } from '../../../atoms/authModalAtom';
 import Login from './Login';
+import SignUp from './SignUp';
 
 type AuthinputsProps = {
     
@@ -18,7 +19,7 @@ const Authinputs:React.FC<AuthinputsProps> = () => {
         mt={4}
         >
             {modalState.view === "login" && <Login/>}
-            {modalState.view === "signup" && "Signup"}
+            {modalState.view === "signup" && <SignUp/>}
         </Flex>
     )
 }

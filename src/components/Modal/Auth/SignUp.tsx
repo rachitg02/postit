@@ -1,20 +1,19 @@
-import { Text, Button, Flex, Input } from '@chakra-ui/react';
+import { Text, Input, Button, Flex } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { authModalState } from '../../../atoms/authModalAtom';
 
-type LoginProps = {
-    
-};
 
-const Login:React.FC<LoginProps> = () => {
+const SignUp:React.FC = () => {
+    
     const setAuthModalState = useSetRecoilState(authModalState);
-    const [loginForm, setLoginForm] =useState({
+    const [signUpForm, setSignUpForm] =useState({
         email:"",
         password:"",
+        confirmPassword:"",
     })
     const onChange=(event: React.ChangeEvent<HTMLInputElement>)=>{
-        setLoginForm((prev)=>({
+        setSignUpForm((prev)=>({
             ...prev,
             [event.target.name]:event.target.value,
         }))
@@ -28,7 +27,7 @@ const Login:React.FC<LoginProps> = () => {
             name="email"
             placeholder="email"
             type="email"
-            mb={3}
+            mb={2}
             onChange={onChange}
             fontSize="10pt"
             _placeholder={{color:"gray.300"}}
@@ -67,26 +66,48 @@ const Login:React.FC<LoginProps> = () => {
             }}
             bg="black"
             />
+            <Input
+            required
+            name="confirmPassword"
+            placeholder="confirm password"
+            type="password"
+            mb={3}
+            onChange={onChange}
+            fontSize="10pt"
+            _placeholder={{color:"gray.300"}}
+            _hover={{
+                bg:"black",
+                border:"1px solid",
+                borderColor:"cyan.900"
+            }}
+            _focus={{
+                outline:"none",
+                bg:"black",
+                border:"1px solid",
+                borderColor:"cyan.900"
+            }}
+            bg="black"
+            />
             <Button 
             width='100%'
             height="36px"
             mt={2}
             mb={2}
             type='submit'
-            >Log In</Button>
+            >Sign Up</Button>
             <Flex fontSize="9pt" justifyContent="center">
-                <Text mr={1}>New here?</Text>
+                <Text mr={1}>Already a member?</Text>
                 <Text 
                 color="cyan.500" 
                 fontWeight={700}
                 cursor="pointer"
                 onClick={()=>setAuthModalState(prev=>({
                     ...prev,
-                    view:'signup'
+                    view:'login'
                 }))}
-                >Sign Up</Text>
+                >Log In</Text>
             </Flex>
         </form>
     )
 }
-export default Login;
+export default SignUp;
