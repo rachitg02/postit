@@ -36,12 +36,11 @@ export const Button: ComponentStyleConfig = {
       }
     },
     oauth: {
-      bg:'black',
+      bg:'white',
       height: "34px",
-      border: "1px solid",
-      borderColor: "gray.300",
+      textColor:"black",
       _hover: {
-        bg: "gray.50",
+        bg: "gray.200",
         textColor:"black"
       },
     },
