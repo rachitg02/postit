@@ -2,6 +2,8 @@ import { Text, Input, Button, Flex } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { authModalState } from '../../../atoms/authModalAtom';
+import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { auth } from '../../../firebase/clientApp'
 
 
 const SignUp:React.FC = () => {
@@ -18,7 +20,17 @@ const SignUp:React.FC = () => {
             [event.target.name]:event.target.value,
         }))
     };
-    const onSubmit=()=>{};
+    const [error,setError]= useState('');
+    const [createUserWithEmailAndPassword,user,loading,userError] = useCreateUserWithEmailAndPassword(auth);
+    const onSubmit=(event:React.FormEvent<HTMLFormElement>)=>{
+        event.preventDefault();
+        if(signUpForm.password!==signUpForm.confirmPassword)
+        {
+            setError('Password does not match')
+            return;
+        }
+        createUserWithEmailAndPassword(signUpForm.email,signUpForm.password);
+    };
 
     return (
         <form onSubmit={onSubmit}>
@@ -88,6 +100,9 @@ const SignUp:React.FC = () => {
             }}
             bg="black"
             />
+            {error && (<Text textAlign='center' color='red'>
+                {error}
+            </Text>)}
             <Button 
             width='100%'
             height="36px"
