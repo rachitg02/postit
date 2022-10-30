@@ -43,19 +43,18 @@ const SignUp:React.FC = () => {
             mb={2}
             onChange={onChange}
             fontSize="10pt"
-            _placeholder={{color:"gray.300"}}
+            _placeholder={{color:"gray.500"}}
             _hover={{
-                bg:"black",
-                border:"1px solid",
-                borderColor:"gray.700"
+                border:"2px solid",
+                borderColor:"cyan.100"
             }}
             _focus={{
                 outline:"none",
-                bg:"black",
-                border:"1px solid",
-                borderColor:"gray.700"
+                border:"2px solid",
+                borderColor:"cyan.100"
             }}
-            bg="black"
+            bg="white"
+            textColor='black'
             />
             <Input
             required
@@ -65,19 +64,18 @@ const SignUp:React.FC = () => {
             mb={2}
             onChange={onChange}
             fontSize="10pt"
-            _placeholder={{color:"gray.300"}}
+            _placeholder={{color:"gray.500"}}
             _hover={{
-                bg:"black",
-                border:"1px solid",
-                borderColor:"cyan.900"
+                border:"2px solid",
+                borderColor:"cyan.100"
             }}
             _focus={{
                 outline:"none",
-                bg:"black",
-                border:"1px solid",
-                borderColor:"cyan.900"
+                border:"2px solid",
+                borderColor:"cyan.100"
             }}
-            bg="black"
+            bg="white"
+            textColor='black'
             />
             <Input
             required
@@ -87,19 +85,18 @@ const SignUp:React.FC = () => {
             mb={3}
             onChange={onChange}
             fontSize="10pt"
-            _placeholder={{color:"gray.300"}}
+            _placeholder={{color:"gray.500"}}
             _hover={{
-                bg:"black",
-                border:"1px solid",
-                borderColor:"cyan.900"
+                border:"2px solid",
+                borderColor:"cyan.100"
             }}
             _focus={{
                 outline:"none",
-                bg:"black",
-                border:"1px solid",
-                borderColor:"cyan.900"
+                border:"2px solid",
+                borderColor:"cyan.100"
             }}
-            bg="black"
+            bg="white"
+            textColor='black'
             />
             <Text textAlign='center' color='red'>
                 {error || FIREBASE_ERRORS[userError?.message as keyof typeof FIREBASE_ERRORS]}
