@@ -20,8 +20,8 @@ const RightContent:React.FC<RightContentProps> = ({user}) => {
             {user ? 
             (<Icons/>
             ):(<AuthButtons/>)}
+            <UserMenu user={user}/>
         </Flex>
-        <UserMenu user={user}/>
         </>
     )
 }

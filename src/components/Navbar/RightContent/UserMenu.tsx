@@ -1,4 +1,4 @@
-import { Menu, MenuButton, Button, MenuList, MenuItem, Flex, Icon, MenuDivider } from '@chakra-ui/react';
+import { Menu, MenuButton, Text, MenuList, MenuItem, Flex, Icon } from '@chakra-ui/react';
 import React from 'react';
 import {signOut, User} from 'firebase/auth'
 import {FaUserCircle,FaUserAltSlash} from 'react-icons/fa'
@@ -7,6 +7,7 @@ import {RiUser4Line,RiLoginBoxLine} from 'react-icons/ri';
 import { auth } from '../../../firebase/clientApp';
 import { useSetRecoilState } from 'recoil';
 import { authModalState } from '../../../atoms/authModalAtom';
+import { IoSparkles } from 'react-icons/io5';
 
 type UserMenuProps = {
     user?: User | null; 
@@ -20,21 +21,37 @@ const UserMenu:React.FC<UserMenuProps> = ({user}) => {
     cursor='pointer'
     padding='0px 6px'
     borderRadius={4}
-    _hover={{outline:"1px solid", outlineColor:"gray.600"}}
+    _hover={{outline:"1px solid", outlineColor:"gray.600",bg:"gray.900"}}
   >
     <Flex align='center'>
       <Flex align='center'>
     {user ? (
 
         <>
-        <Icon fontSize={24} mr={1} color='gray.100' as={FaUserCircle}/>
+        <Icon fontSize={22} mr={1} color='gray.100' as={FaUserCircle}/>
+        <Flex 
+        direction="column"
+        display={{base:"none",lg:"flex"}}
+        fontSize="8pt"
+        align="flex-start"
+        mr={6}
+        ml={2}
+        >
+          <Text color='cyan.300'>
+            {user?.displayName || user.email?.split("@")[0]}
+          </Text>
+          <Flex>
+            <Icon as={IoSparkles} color="yellow.300" mr={1}/>
+            <Text color="red.300">1 karma</Text>
+          </Flex>
+        </Flex>
         </>
 
     ):(<Icon 
     as={FaUserAltSlash}
     fontSize={20}
     color='gray.100'
-    mt={1}/>)}
+    mb={1}/>)}
         </Flex>
         <ChevronDownIcon/>
       </Flex>
