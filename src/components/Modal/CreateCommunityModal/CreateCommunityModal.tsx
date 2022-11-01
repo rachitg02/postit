@@ -1,5 +1,9 @@
 import { Text, Box, Button, Divider, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Input, Stack, Checkbox, Flex } from '@chakra-ui/react';
+import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { setLazyProp } from 'next/dist/server/api-utils';
 import React, { useState } from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth, firestore } from '../../../firebase/clientApp';
 
 type CreateCommunityModalProps = {
     open:boolean;
@@ -7,9 +11,13 @@ type CreateCommunityModalProps = {
 };
 
 const CreateCommunityModal:React.FC<CreateCommunityModalProps> = ({open,handleClose}) => {
+    
+    const [user]=useAuthState(auth);
     const [communityName, setCommunityName]= useState('');
     const [charsRemaining,setCharsRemaining]= useState(27);
     const [communityType, setCommunityType]= useState("public");
+    const [error,setError]= useState('');
+    const [loading,setLoading]= useState(false);
 
     const handleChange=(event:React.ChangeEvent<HTMLInputElement>)=>{
         if(event.target.value.length>27) return;
@@ -19,6 +27,41 @@ const CreateCommunityModal:React.FC<CreateCommunityModalProps> = ({open,handleCl
     }
  const onCommunityTypeChange=(event:React.ChangeEvent<HTMLInputElement>)=>{
     setCommunityType(event.target.name)
+ }
+
+ const handleCreateCommunity = async ()=>{
+   if(error) setError('');
+    //Validate the community
+    const format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/; 
+    if(format.test(communityName) || communityName.length<3)
+    {
+        setError('Name must be between 3-27 characters and with no special characters.')
+        return;
+    }
+    setLoading(true);
+    
+    try {
+        //Community document in Firestore
+        const communityDocRef= doc(firestore,'communities',communityName);
+        const communityDoc = await getDoc(communityDocRef);
+    
+        //Check that name is not taken
+        if(communityDoc.exists()){
+            throw new Error(`Sorry, p/${communityName} is taken. Try another`);
+        }
+
+    //If valid name, create community
+    await setDoc(communityDocRef,{
+        createrId: user?.uid,
+        createdAt: serverTimestamp(),
+        numberOfMember: 1,
+        privacyType: communityType,
+    });
+    } catch (error:any) {
+        console.log('handleCreateCommunity error', error);
+        setError(error.message);
+    }
+    setLoading(false);
  }
 
     return (
@@ -75,8 +118,12 @@ const CreateCommunityModal:React.FC<CreateCommunityModalProps> = ({open,handleCl
             ml={1}
             color={charsRemaining === 0 ? "red.300": "green.300"}
             >{charsRemaining} characters remaining</Text>
+            
+            <Text mt={1} fontSize={10} color='red' pt={1}
+            >{error}</Text>
+            
             <Box
-            mt={4}
+            mt={2}
             mb={4}
             >
                 <Text 
@@ -96,7 +143,7 @@ const CreateCommunityModal:React.FC<CreateCommunityModalProps> = ({open,handleCl
                         <Flex align="center">
                             <Text ml={1} fontSize={16}>📢 Public</Text>
                             <Text ml={2} fontSize={12} color='gray.400'>
-                                Anyone can view, post and comment
+                                Anyone can view, post and comment.
                             </Text>
                         </Flex>
                     </Checkbox>
@@ -110,7 +157,7 @@ const CreateCommunityModal:React.FC<CreateCommunityModalProps> = ({open,handleCl
                         <Flex align="center">
                             <Text ml={1} fontSize={16}>⛔ Restricted</Text>
                             <Text ml={2} fontSize={12} color='gray.400'>
-                                Anyone can view, but only approved users can post
+                                Anyone can view, but only approved users can post.
                             </Text>
                         </Flex>
                     </Checkbox>
@@ -124,7 +171,7 @@ const CreateCommunityModal:React.FC<CreateCommunityModalProps> = ({open,handleCl
                         <Flex align="center">
                             <Text ml={1} fontSize={16}>🔓 Private</Text>
                             <Text ml={2} fontSize={12} color='gray.400'>
-                                Only approved users can view and post
+                                Only approved users can view and post.
                             </Text>
                         </Flex>
                     </Checkbox>
@@ -141,7 +188,11 @@ const CreateCommunityModal:React.FC<CreateCommunityModalProps> = ({open,handleCl
             >
               Cancel
             </Button>
-            <Button height="34px">Create Community</Button>
+            <Button 
+            height="34px"
+            onClick={handleCreateCommunity}
+            isLoading={loading}
+            >Create Community</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

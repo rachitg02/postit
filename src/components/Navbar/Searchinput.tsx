@@ -20,13 +20,13 @@ const Searchinput:React.FC<SearchinputProps> = ({user}) => {
             <InputLeftElement pointerEvents='none'>
                 <SearchIcon color='white' mb={2}/>
             </InputLeftElement>
-            <Input 
+            <Input
             placeholder='Search Postit'
             fontSize='10pt'
             variant='filled'
             _placeholder={{color: "white"}}
             _hover={{
-                bg:"gray.800",
+                bg:"gray.900",
                 border:'1px solid',
                 borderColor:"gray.600"
             }}
