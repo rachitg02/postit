@@ -5,6 +5,7 @@ import { Community } from '../../../atoms/communitiesAtom';
 import { firestore } from '../../../firebase/clientApp';
 import safeJsonStringify from 'safe-json-stringify'
 import NotFound from '../../../components/Community/NotFound';
+import Header from '../../../components/Community/Header';
 
 type CommunityPageProps = {
     communityData: Community;
@@ -15,7 +16,11 @@ const CommunityPage:React.FC<CommunityPageProps> = ({communityData}) => {
     if(!communityData){
         return (<NotFound/>)
     }
-    return <div>{communityData.id}</div>
+    return (
+        <>
+        <Header communityData={communityData}/>
+        </>
+    )
 }
 
 
