@@ -1,4 +1,4 @@
-import { Flex, Hide, Image } from '@chakra-ui/react';
+import { Flex,Image} from '@chakra-ui/react';
 import React from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../firebase/clientApp';
@@ -20,16 +20,17 @@ const Navbar:React.FC = () => {
             width={{base:"40px",md:"auto"}}
             mr={{base:0, md:2}}
             >
-                <Image 
-                src='images/logoface.svg' 
-                height="30px"
-                />
-                 <Image 
-                 ml='2' 
-                 mr='4' 
-                 src='images/logotext.svg' 
-                 height="70px" 
-                 display={{base:"none",md:"unset"}}/>
+            <Image 
+            src="/logoface.svg" 
+            height="30px"
+            mr={3} />
+            <Image
+            display={{ base: "none", md: "unset" }}
+            src="/logotext.svg"
+            height="80px"
+            mb={1}
+            mr={4}
+            />
             </Flex>
                 {user && <Directory/>}
                 <Searchinput user={user}/>
