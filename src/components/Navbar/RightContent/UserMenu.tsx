@@ -5,9 +5,10 @@ import {FaUserCircle,FaUserAltSlash} from 'react-icons/fa'
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import {RiUser4Line,RiLoginBoxLine} from 'react-icons/ri';
 import { auth } from '../../../firebase/clientApp';
-import { useSetRecoilState } from 'recoil';
+import { useResetRecoilState, useSetRecoilState } from 'recoil';
 import { authModalState } from '../../../atoms/authModalAtom';
 import { IoSparkles } from 'react-icons/io5';
+import { communityState } from '../../../atoms/communitiesAtom';
 
 type UserMenuProps = {
     user?: User | null; 
@@ -15,6 +16,12 @@ type UserMenuProps = {
 
 const UserMenu:React.FC<UserMenuProps> = ({user}) => {
     const setAuthModalState= useSetRecoilState(authModalState);
+    const resetCommunityState=useResetRecoilState(communityState)
+    const logout = async ()=> {
+      signOut(auth);
+      resetCommunityState();
+    }
+
     return (
 <Menu>
   <MenuButton
@@ -80,7 +87,7 @@ const UserMenu:React.FC<UserMenuProps> = ({user}) => {
     fontWeight={700}
     _hover={{bg:"cyan.500", color:"white"}}
     _focus={{bg:"cyan.500", color:"white"}}
-    onClick={()=> signOut(auth)}
+    onClick={logout}
     >
     <Flex>
       <Icon fontSize={20} mr={2} as={RiLoginBoxLine}/>
