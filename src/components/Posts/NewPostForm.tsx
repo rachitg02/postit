@@ -5,11 +5,14 @@ import {GoFileMedia} from 'react-icons/go'
 import {BiLink} from 'react-icons/bi'
 import {FaPoll} from 'react-icons/fa'
 import TabItem from './TabItem';
+import { async } from '@firebase/util';
+import TextInputs from './PostForm/TextInputs';
+import ImageUpload from './PostForm/ImageUpload';
 type NewPostFormProps = {
     
 };
 
-const formTabs =[
+const formTabs:TabItem[] =[
     {
         title: "Post",
         icon: HiDocumentText
@@ -18,14 +21,6 @@ const formTabs =[
         title: "Images & Video",
         icon: GoFileMedia
     },
-    {
-        title: "Link",
-        icon: BiLink
-    },
-    {
-        title: "Poll",
-        icon: FaPoll
-    }
 ]
 export type TabItem={
     title: string;
@@ -33,7 +28,44 @@ export type TabItem={
 }
 
 const NewPostForm:React.FC<NewPostFormProps> = () => {
-    const [selectionTab,setSelectedTab]=useState(formTabs[0].title)
+    const [selectedTab,setSelectedTab]=useState(formTabs[0].title)
+    const [loading,setLoading]= useState(false)
+    const [textInputs,setTextInputs]= useState({
+        title:"",
+        body:"",
+    })
+    const [selectedFile,setSelectedFile]= useState<string>();
+
+
+    const handleCreatePost =async()=>{
+
+    }
+
+    const onSelectImage=(event:React.ChangeEvent<HTMLInputElement>)=>{
+        const reader = new FileReader();
+
+        if(event.target.files?.[0]){
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        reader.onload =(readerEvent)=>{
+            if(readerEvent.target?.result){
+                setSelectedFile(readerEvent.target.result as string);
+            }
+        }
+    }
+
+    const onTextChange=(event:React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)=>{
+        const {
+            target:{name,value},
+        }=event;
+        setTextInputs((prev)=>({
+            ...prev,
+            [name]:value,
+        }))
+    }
+    
+    
     return (
         <Flex
         borderRadius={4}
@@ -46,8 +78,28 @@ const NewPostForm:React.FC<NewPostFormProps> = () => {
                     key={item.title} 
                     item={item}
                     setSelectedTab={setSelectedTab}
-                    selected={item.title === selectionTab}/>
+                    selected={item.title === selectedTab}/>
                 ))}
+            </Flex>
+            <Flex p={4}>
+                {selectedTab ==="Post" &&(
+                    <TextInputs
+                    textInputs={textInputs}
+                    handleCreatePost={handleCreatePost}
+                    onChange={onTextChange}
+                    loading={loading}
+                />
+                )
+                }
+                {selectedTab ==="Images & Video" &&(
+                    <ImageUpload
+                    selectedFile={selectedFile}
+                    onSelectImage={onSelectImage}
+                    setSelectedTab={setSelectedTab}
+                    setSelectedFile={setSelectedFile}
+                    />
+                )
+                }
             </Flex>
         </Flex>
     )
