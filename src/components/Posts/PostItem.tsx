@@ -11,7 +11,7 @@ IoArrowUpCircleOutline,
 IoArrowUpCircleSharp,
 IoShareSocialSharp
 } from 'react-icons/io5'
-import { Image, Text, Flex, Icon, Stack, Skeleton } from '@chakra-ui/react';
+import { Image, Text, Flex, Icon, Stack, Skeleton, Spinner, Alert, AlertIcon } from '@chakra-ui/react';
 import moment from 'moment';
 
 type PostItemProps = {
@@ -19,7 +19,7 @@ type PostItemProps = {
     userIsCreator:boolean;
     userVoteValue:any;
     onVote:()=>{};
-    onDeletePost:()=>{};
+    onDeletePost:(post:Post)=>Promise<boolean>;
     onSelectPost:()=>void;
 };
 
@@ -32,7 +32,24 @@ onDeletePost,
 onSelectPost,
 }) => {
     
+    const [loadingDelete,setLoadingDelete] = useState(false);
     const [loadingImage,setLoadingImage] = useState(true);
+    const [error,setError] = useState(false)
+    
+    const handleDelete = async () =>{
+        setLoadingDelete(true)
+        try {
+            const success = await onDeletePost(post);
+            if(!success){
+                throw new Error("Failed to delete post")
+            }
+
+            console.log("Post was successfully deleted")
+        } catch (error:any) {
+            setError(error.message)
+        }
+        setLoadingDelete(false)
+    }
 
     return (
         <Flex 
@@ -68,6 +85,12 @@ onSelectPost,
                 />
             </Flex>
             <Flex p={1} direction='column' width='100%'>
+                {error && (
+                <Alert status="error">
+                    <AlertIcon/>
+                    <Text color='red' mr={2}>Error deleting post</Text>
+                </Alert>
+            )}
                 <Stack spacing={1} p='10px'>
                     <Stack
                     direction='row'
@@ -131,10 +154,16 @@ onSelectPost,
                         borderRadius={4}
                         _hover={{bg:"gray.700"}}
                         cursor="pointer"
-                        onClick={onDeletePost}
+                        onClick={handleDelete}
                         >
-                            <Icon as={AiFillDelete} mr={2}/>
-                            <Text fontSize='9pt'>Delete</Text>
+                            {loadingDelete ? (
+                             <Spinner size='sm'/>
+                            ):(
+                                <>
+                                    <Icon as={AiFillDelete} mr={2}/>
+                                    <Text fontSize='9pt'>Delete</Text>
+                                </>
+                            )}
                         </Flex>}
                 </Flex>
             </Flex>
