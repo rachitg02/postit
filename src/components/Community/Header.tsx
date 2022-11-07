@@ -36,8 +36,14 @@ const Header:React.FC<HeaderProps> = ({communityData}) => {
                 width='95%'
                 maxWidth='860px'
                 >
-                    {communityData.imageURL?(
-                        <Image/>
+                    {communityStateValue.currentCommunity?.imageURL ?(
+                        <Image 
+                        borderRadius="full"
+                        boxSize="64px"
+                        position="relative"
+                        top={-3}
+                        color="cyan.200"
+                        src={communityStateValue.currentCommunity.imageURL}/>
                     ):(
                     <Icon
                     as={FaStumbleuponCircle}
